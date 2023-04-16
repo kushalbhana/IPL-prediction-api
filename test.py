@@ -1,10 +1,10 @@
 import requests
 import json
 
-URL = "http://127.0.0.1:8000/prediction/"
+URL = "http://127.0.0.1:8000/score_prediction/"
 
 data = {
-        'stadium' : 'Holkar Cricket Stadium',
+        'venue' : 'Holkar Cricket Stadium',
         'batting_team' : 'CSK',
         'bowling_team' : 'MI',
         'run_left' : 121,

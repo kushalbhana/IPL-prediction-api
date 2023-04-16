@@ -62,10 +62,42 @@ def prediction(request):
         return HttpResponse(json_data)
 
 
+@csrf_exempt
+def score_prediction(request):
+    if request.method == 'POST':
+        frontend_data = request.body
+        my_data = json.loads(frontend_data)
 
-def score_prediction(index):
-    prediction_model_1 = pickle.load(open('C:/Users/kusha/Documents/Hackathon/GFG/casting_api/api/components/models/Score_pred', 'rb'))
-    new_data = pd.DataFrame({'batting_team': [0], 'bowling_team': [4], 'venue':[12]})
-    predicted_score = prediction_model_1.predict(new_data)
-    print('Predicted first innings score:', predicted_score)
-    return HttpResponse('Score')
+        # Venues for IPL matches
+        stadiums= ['Barabati Stadium', 'Brabourne Stadium', 'Buffalo Park',
+        'De Beers Diamond Oval', 'Dr DY Patil Sports Academy',
+        'Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium',
+        'Dubai International Cricket Stadium', 'Eden Gardens',
+        'Feroz Shah Kotla', 'Himachal Pradesh Cricket Association Stadium',
+        'Holkar Cricket Stadium', 'JSCA International Stadium Complex',
+        'Kingsmead', 'M Chinnaswamy Stadium',
+        'MA Chidambaram Stadium, Chepauk', 'New Wanderers Stadium',
+        'Newlands', 'OUTsurance Oval',
+        'Punjab Cricket Association Stadium, Mohali',
+        'Rajiv Gandhi International Stadium, Uppal',
+        'Sardar Patel Stadium, Motera', 'Sawai Mansingh Stadium',
+        'Shaheed Veer Narayan Singh International Stadium',
+        'Sharjah Cricket Stadium', 'Sheikh Zayed Stadium',
+        "St George's Park", 'Subrata Roy Sahara Stadium',
+        'SuperSport Park', 'Vidarbha Cricket Association Stadium, Jamtha',
+        'Wankhede Stadium']
+        
+        teams = ['CSK', 'DC', 'KKR', 'MI', 'PBKS', 'RCB', 'RR', 'SRH']
+
+        batting_team = teams.index(my_data['batting_team'])
+        bowling_team = teams.index(my_data['bowling_team'])
+        venue = stadiums.index(my_data['venue'])
+
+        # Prediction model
+        prediction_model_1 = pickle.load(open('C:/Users/kusha/Documents/Hackathon/GFG/casting_api/api/components/models/Score_pred', 'rb'))
+        new_data = pd.DataFrame({'batting_team': [batting_team], 'bowling_team': [bowling_team], 'venue':[venue]})
+        predicted_score = prediction_model_1.predict(new_data)
+        print('Predicted first innings score:', predicted_score)
+
+        data = {'predicted score': predicted_score}
+        return HttpResponse(predicted_score)
