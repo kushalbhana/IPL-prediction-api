@@ -21,4 +21,5 @@ from api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('prediction/', views.prediction),
+    path('score_prediction/', views.score_prediction),
 ]
